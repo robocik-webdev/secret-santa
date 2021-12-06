@@ -13,7 +13,7 @@
     }
   }
 
-  $correctToken = 'inSp9tfs0hpDI';
+  $correctToken = getenv('TOKEN');
   $token = $_POST['token'];
   
   if ($token == $correctToken) {
