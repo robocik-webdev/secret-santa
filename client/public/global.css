@@ -1,0 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Merriweather", serif;
+  font-size: clamp(1rem, 10vw, 1.5rem);
+}
+
+:is(h1, h2, h3, h4, h5, h6) {
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(1rem, 15vw, 6rem);
+}
