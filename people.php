@@ -17,7 +17,7 @@
 
   $email = $_POST['email'];
   
-  $people = getCsvFileAsJson('people.csv');
+  $people = getCsvFileAsJson('private/people.csv');
   srand(18122021);
   shuffle($people);
 
