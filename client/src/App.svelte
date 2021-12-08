@@ -30,7 +30,7 @@
 
 <div class="bg" />
 <main>
-  <img src="./client/public/wieniec.png" alt="wieniec" />
+  <img src="./client/public/wieniec.webp" alt="wieniec" />
   {#if person}
     <h1>{person[0]}</h1>
     <p>{person[2]}</p>
