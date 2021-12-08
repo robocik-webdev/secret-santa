@@ -1,25 +1,36 @@
 <?php
   function getCsvFileAsJson($csv) {
+    $delimeter = ';';
+    $rows = 1000;
     if ($file = fopen($csv, 'r')) {
-      // get headers
-      $key = fgetcsv($file, 1000, ',');
-      // parse rows into an array
-      $json = array();
-      while ($row = fgetcsv($file, 1000, ',')) {
-        $json[] = array_combine($key, $row);
+      // headers
+      $keys = fgetcsv($file, $rows, $delimeter);
+      // array of arrays
+      $data = array();
+      while ($row = fgetcsv($file, $rows, $delimeter)) {
+        $data[] = $row;
       }
       fclose($file);
-      return $json;
+      return $data;
     }
   }
 
-  $correctToken = getenv('TOKEN');
-  $token = $_POST['token'];
+  $email = $_POST['email'];
   
-  if ($token == $correctToken) {
-    $people = getCsvFileAsJson('people.csv');
-    srand(18122021);
-    shuffle($people);
-    echo json_encode($people);
+  $people = getCsvFileAsJson('people.csv');
+  srand(18122021);
+  shuffle($people);
+
+  $person = NULL;
+  for ($i = 0; $i < count($people); $i++) {
+    if ($people[$i][1] == $email) {
+      if (array_key_exists($i + 1, $people)) {
+        $person = $people[$i + 1];
+      } else {
+        $person = $people[0];
+      }
+      break;
+    }
   }
+  echo json_encode($person);
 ?>

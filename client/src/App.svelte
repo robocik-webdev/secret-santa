@@ -1,54 +1,80 @@
 <script>
-  async function people(token) {
+  async function people(email) {
     const formData = new FormData();
-    formData.append("token", token);
+    formData.append("email", email);
 
     const res = await fetch("./people.php", { method: "POST", body: formData });
-    json = JSON.parse(await res.text());
+    person = JSON.parse(await res.text());
+    waiting = false;
+    notfound = !person;
   }
 
-  let token;
-  let json;
+  let email;
+  let person;
+
+  let waiting = false;
+  let notfound = false;
 
   const args = new URLSearchParams(window.location.search);
-  const t = args.get("t");
-  if (t) token = t;
-  $: people(token);
+  const e = args.get("e");
+  if (e) email = e;
+
+  let antiDDOS;
+  $: if (email) {
+    waiting = true;
+    notfound = false;
+    clearTimeout(antiDDOS);
+    antiDDOS = setTimeout(() => people(email), 1000);
+  }
 </script>
 
 <div class="bg" />
 <main>
-  {#if json}
-    <div class="content">
-      <h1>Grzeczne dzieci...</h1>
-      {#each json as { name, amount }}
-        {name} |&nbsp;
-      {/each}
-      {json[0].name}
-    </div>
+  <img src="./client/public/wieniec.png" alt="wieniec" />
+  {#if person}
+    <h1>{person[0]}</h1>
+    <p>{person[2]}</p>
+    <p>{person[3]}</p>
+    <p>{person[4]}</p>
   {:else}
-    <h1>Wpisz hasło żeby zobaczyć listę grzecznych dzieci...</h1>
-    <input type="password" bind:value={token} />
+    <h1>Wpisz twój email,<br />aby odnaleźć<br />swojego wybrańca...</h1>
+    <input type="text" bind:value={email} />
+    {#if waiting}<small>Szukamy...</small>{/if}
+    {#if notfound}<small>Elfy nic nie znalazły!</small>{/if}
   {/if}
 </main>
 
 <style>
   .bg {
+    z-index: 0;
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
     width: 100%;
-    background-image: url("../bgu.jpg");
-    background-repeat: no-repeat;
+    background-image: url("../bg.gif");
     background-size: cover;
+    background-repeat: repeat;
+    opacity: 0.2;
   }
   main {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     position: relative;
+    padding: 40px 10px;
+    min-height: 100%;
+    width: 100vw;
     color: #fff;
-    margin-top: 40vh;
-  }
-  .content {
     text-align: center;
+  }
+  img {
+    margin-bottom: 20px;
+    width: clamp(100px, 20vw, 250px);
+  }
+  small {
+    margin-top: 10px;
   }
 </style>
